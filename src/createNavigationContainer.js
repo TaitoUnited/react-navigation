@@ -43,10 +43,6 @@ export default function createNavigationContainer<S: *, O>(
     state: State;
     props: Props<O, S>;
 
-    subs: ?{
-      remove: () => void,
-    } = null;
-
     static router = Component.router;
 
     constructor(props: Props<O, S>) {
@@ -151,10 +147,6 @@ export default function createNavigationContainer<S: *, O>(
         return;
       }
 
-      this.subs = BackHandler.addEventListener('hardwareBackPress', () =>
-        this.dispatch(NavigationActions.back())
-      );
-
       Linking.addEventListener('url', ({ url }: { url: string }) => {
         this._handleOpenURL(url);
       });
@@ -166,7 +158,6 @@ export default function createNavigationContainer<S: *, O>(
 
     componentWillUnmount() {
       Linking.removeEventListener('url', this._handleOpenURL);
-      this.subs && this.subs.remove();
     }
 
     dispatch = (action: NavigationAction) => {
